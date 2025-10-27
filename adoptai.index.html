@@ -30,7 +30,10 @@
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-        .animate-spin { animation: spin 1s linear infinite; }
+        /* Using a class for the SVG element */
+        .svg-spin-fast {
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
@@ -42,7 +45,6 @@
         const { useState, Fragment, useEffect } = React;
 
         // --- Mock Lucide Icons (Inline SVGs) ---
-        // (Icons remain unchanged)
         const SVG_ATTRIBUTES = {
             xmlns: "http://www.w3.org/2000/svg",
             width: "24",
@@ -124,7 +126,7 @@
         // --- Constants ---
 
         const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
-        const API_KEY = ""; 
+        const API_KEY = ""; // Placeholder for the environment API key
 
         const SYSTEM_PROMPT = `You are "AdOpt", an expert-level Marketing Analyst and Data Scientist. Your specialty is analyzing ad campaign data from Google, Meta, and TikTok.
 
@@ -181,6 +183,7 @@ Your report MUST be structured with the following three sections:
          * Parses the raw text response from the LLM into a structured object.
          */
         const parseAnalysis = (text) => {
+          // Use regex to find the content between section headers
           const evaluationMatch = text.match(/1\. \*\*Performance Evaluation:\*\*(.*?)(?=2\. \*\*Key Insights:\*\*|$)/s);
           const insightsMatch = text.match(/2\. \*\*Key Insights:\*\*(.*?)(?=3\. \*\*Actionable Recommendations:\*\*|$)/s);
           const recommendationsMatch = text.match(/3\. \*\*Actionable Recommendations:\*\*(.*)/s);
@@ -201,29 +204,30 @@ Your report MUST be structured with the following three sections:
         };
 
 
-        // --- React Components (App and sub-components remain unchanged) ---
+        // --- React Components ---
 
         /**
          * A collapsible component to guide the user on data input.
          */
         const DataGuidance = () => (
-          <details className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
-            <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+          <details className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md overflow-hidden transition-all duration-300">
+            <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-6 h-6 text-indigo-500" />
                 <span className="text-lg font-semibold text-gray-800 dark:text-gray-100">
                   How to Provide Data for a Perfect Analysis
                 </span>
               </div>
-              <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400 transform transition-transform duration-200" />
+              {/* Chevron Down/Up icon */}
+              <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200" />
             </summary>
             <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
               <p className="mb-4 text-gray-700 dark:text-gray-300">
-                For the best results, paste your data as plain text. CSV (Comma-Separated Values) format is ideal. The more data you provide, the better the insights!
+                For the best results, paste your data as plain text. <code className="font-mono bg-gray-200 dark:bg-gray-900 p-1 rounded">CSV</code> (Comma-Separated Values) format is ideal. The more data you provide, the better the insights!
               </p>
               
-              <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Key Metrics to Include:</h4>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
+              <h4 className="font-bold text-sm text-gray-800 dark:text-gray-100 mb-2">Key Metrics to Include:</h4>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 list-disc list-inside text-gray-700 dark:text-gray-300 text-sm mb-4">
                 <li>Platform (Google, Meta, etc.)</li>
                 <li>Campaign Name</li>
                 <li>Spend (Cost)</li>
@@ -237,14 +241,14 @@ Your report MUST be structured with the following three sections:
                 <li>ROAS (Return on Ad Spend)</li>
               </ul>
               
-              <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">For A/B Tests, also add:</h4>
-              <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mb-6">
-                <li><code>Group</code> (e.g., "A", "B", "Control", "Variant")</li>
-                <li><code>Variable Tested</code> (e.g., "Headline", "Audience")</li>
+              <h4 className="font-bold text-sm text-gray-800 dark:text-gray-100 mb-2">For A/B Tests, also add:</h4>
+              <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 text-sm mb-6">
+                <li><code className="font-mono bg-gray-200 dark:bg-gray-900 p-1 rounded">Group</code> (e.g., "A", "B", "Control", "Variant")</li>
+                <li><code className="font-mono bg-gray-200 dark:bg-gray-900 p-1 rounded">Variable Tested</code> (e.g., "Headline", "Audience")</li>
               </ul>
               
-              <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Example Format (CSV):</h4>
-              <pre className="p-3 bg-gray-100 dark:bg-gray-900 rounded-md text-sm text-gray-800 dark:text-gray-200 overflow-x-auto">
+              <h4 className="font-bold text-sm text-gray-800 dark:text-gray-100 mb-2">Example Format (CSV):</h4>
+              <pre className="p-3 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-xs text-gray-800 dark:text-gray-200 overflow-x-auto shadow-inner">
                 {`Platform,Campaign Name,Spend,Impressions,Clicks,Conversions,Revenue\n`}
                 {`Google,Product Launch - Search,1500,50000,2500,100,6000\n`}
                 {`Meta,Product Launch - Video,2000,150000,3000,120,7200\n`}
@@ -257,87 +261,97 @@ Your report MUST be structured with the following three sections:
         /**
          * Component to display the final analysis result.
          */
-        const AnalysisResult = ({ result, sources }) => (
-          <div className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg animate-fade-in">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Campaign Analysis Report
-              </h2>
-              
-              {/* Performance Evaluation */}
-              <div className="mb-6">
-                <div className="flex items-center space-x-3 mb-3">
-                  <BarChart2 className="w-6 h-6 text-indigo-500" />
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Performance Evaluation</h3>
-                </div>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {result.evaluation}
-                </p>
-              </div>
-              
-              {/* Key Insights */}
-              <div className="mb-6">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Lightbulb className="w-6 h-6 text-yellow-500" />
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Key Insights</h3>
-                </div>
-                <ul className="space-y-2">
-                  {result.insights.map((insight, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="flex-shrink-0 w-5 h-5 text-indigo-500 mt-1 mr-3">
-                        <CheckCircle className="w-5 h-5" />
-                      </span>
-                      <span className="text-gray-700 dark:text-gray-300">{insight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              {/* Actionable Recommendations */}
-              <div className="mb-6">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Target className="w-6 h-6 text-green-500" />
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Actionable Recommendations</h3>
-                </div>
-                <ul className="space-y-2">
-                  {result.recommendations.map((rec, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="flex-shrink-0 w-5 h-5 text-green-500 mt-1 mr-3">
-                        <Target className="w-5 h-5" />
-                      </span>
-                      <span className="text-gray-700 dark:text-gray-300">{rec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        const AnalysisResult = ({ result, sources }) => {
+            
+            // Function to sanitize and render markdown lists/paragraphs
+            const renderContent = (content) => {
+                // Simple paragraph splitting for main evaluation
+                if (typeof content === 'string') {
+                    return content.split('\n').map((paragraph, index) => (
+                        <p key={index} className="mb-4 last:mb-0">
+                            {paragraph}
+                        </p>
+                    ));
+                }
+                // List rendering for insights/recommendations (should be an array)
+                if (Array.isArray(content)) {
+                    return (
+                        <ul className="space-y-2">
+                            {content.map((item, index) => (
+                                <li key={index} className="flex items-start">
+                                    <span className="flex-shrink-0 w-2 h-2 rounded-full bg-indigo-500 mt-2 mr-3 border-2 border-indigo-700 dark:border-indigo-400"></span>
+                                    <span className="text-gray-700 dark:text-gray-300 text-base">{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    );
+                }
+                return <p>Analysis data structure error.</p>;
+            };
 
-              {/* Sources */}
-              {sources && sources.length > 0 && (
-                <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <Search className="w-5 h-5 text-gray-500" />
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Sources (from Google Search)</h3>
+            return (
+              <div className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl animate-fade-in p-6 sm:p-8">
+                
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b pb-3 border-gray-100 dark:border-gray-700">
+                    Campaign Analysis Report
+                  </h2>
+                  
+                  {/* Performance Evaluation */}
+                  <div className="mb-8">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <BarChart2 className="w-6 h-6 text-indigo-500" />
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">Performance Evaluation</h3>
+                    </div>
+                    <div className="text-gray-700 dark:text-gray-300 leading-relaxed pl-3 border-l-4 border-indigo-200 dark:border-indigo-500/50">
+                      {renderContent(result.evaluation)}
+                    </div>
                   </div>
-                  <ul className="space-y-2">
-                    {sources.map((source, index) => (
-                      <li key={index} className="flex items-start">
-                        <a 
-                          href={source.uri} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline truncate"
-                          title={source.title}
-                        >
-                          {`[${index + 1}] ${source.title}`}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        );
+                  
+                  {/* Key Insights */}
+                  <div className="mb-8">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <Lightbulb className="w-6 h-6 text-yellow-500" />
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">Key Insights</h3>
+                    </div>
+                    {renderContent(result.insights)}
+                  </div>
+                  
+                  {/* Actionable Recommendations */}
+                  <div className="mb-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <Target className="w-6 h-6 text-green-500" />
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">Actionable Recommendations</h3>
+                    </div>
+                    {renderContent(result.recommendations)}
+                  </div>
+
+                  {/* Sources */}
+                  {sources && sources.length > 0 && (
+                    <div className="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <Search className="w-5 h-5 text-gray-500" />
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Sources (from Google Search)</h3>
+                      </div>
+                      <ul className="space-y-2">
+                        {sources.map((source, index) => (
+                          <li key={index} className="flex items-start">
+                            <a 
+                              href={source.uri} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline truncate"
+                              title={source.title}
+                            >
+                              {`[${index + 1}] ${source.title}`}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+              </div>
+            );
+        };
 
         /**
          * Main Application Component
@@ -362,24 +376,29 @@ Meta,LeadGen - Service C,N/A,N/A,1200,80000,1000,200,N/A
 `;
 
           const handleUseExample = () => {
-            setCampaignData(exampleData);
-            setUserQuery("Analyze the A/B test for Product A. Also, compare the performance of Product B campaigns on Meta vs. TikTok.");
-            setAnalysisType('ab-test');
+            setCampaignData(exampleData.trim()); // Trim whitespace for cleaner input
+            setUserQuery("Analyze the A/B test for Product A. Compare the performance of Product B campaigns on Meta vs. TikTok.");
+            setAnalysisType('cross-channel'); // Cross-channel is more appropriate for the example
+            setAnalysisResult(null);
+            setError(null);
           };
 
           const handleCopyToClipboard = () => {
             if (!analysisResult) return;
             
             const textToCopy = `
+AdOpt Campaign Analysis Report
+
 Performance Evaluation:
 ${analysisResult.evaluation}
 
 Key Insights:
-${analysisResult.insights.map(i => `- ${i}`).join('\n')}
+${analysisResult.insights.map(i => `• ${i}`).join('\n')}
 
 Actionable Recommendations:
-${analysisResult.recommendations.map(r => `- ${r}`).join('\n')}
+${analysisResult.recommendations.map(r => `• ${r}`).join('\n')}
 
+---
 Sources:
 ${sources.map((s, index) => `[${index + 1}] ${s.title}: ${s.uri}`).join('\n')}
             `;
@@ -421,6 +440,7 @@ ${campaignData}
               systemInstruction: {
                 parts: [{ text: SYSTEM_PROMPT }]
               },
+              // Enable Google Search for grounding the recommendations
               tools: [{ "google_search": {} }],
             };
 
@@ -439,6 +459,7 @@ ${campaignData}
                 });
 
                 if (!response.ok) {
+                  // Throw error specifically for rate limiting or other severe issues
                   if (response.status === 429) {
                     throw new Error('Rate limit exceeded. Retrying...');
                   }
@@ -471,10 +492,10 @@ ${campaignData}
                 }
 
               } catch (err) {
-                console.error(err);
+                console.error("Attempt failed:", err.message);
                 retries--;
                 if (retries === 0) {
-                  setError(`Failed to get analysis after multiple attempts. Error: ${err.message}`);
+                  setError(`Failed to get analysis after multiple attempts. Please check your query or data format. Last error: ${err.message}`);
                 } else {
                   // Exponential backoff
                   await new Promise(resolve => setTimeout(resolve, delay));
@@ -487,15 +508,15 @@ ${campaignData}
           };
 
           return (
-            <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-inter p-4 sm:p-8">
+            <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-8">
               
-              <div className="max-w-5xl mx-auto">
-                <header className="text-center mb-8">
-                  <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-3">
-                    AdOpt <span className="text-indigo-500">AI Campaign Analyzer</span>
+              <div className="max-w-5xl mx-auto pb-12">
+                <header className="text-center mb-10 pt-4">
+                  <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">
+                    AdOpt <span className="text-indigo-600 dark:text-indigo-400">AI Campaign Analyzer</span>
                   </h1>
-                  <p className="text-lg text-gray-600 dark:text-gray-400">
-                    Paste your campaign data, ask a question, and get expert analysis for sustainable growth.
+                  <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    Paste your marketing data, ask a specific question, and get expert, **grounded analysis** for smarter optimization.
                   </p>
                 </header>
 
@@ -503,18 +524,18 @@ ${campaignData}
                 <DataGuidance />
 
                 {/* Main Form */}
-                <form onSubmit={handleSubmit} className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-6 sm:p-8 space-y-6">
+                <form onSubmit={handleSubmit} className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl p-6 sm:p-8 space-y-6">
                   
                   {/* Campaign Data Textarea */}
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <label htmlFor="campaignData" className="block text-sm font-semibold text-gray-800 dark:text-gray-100">
+                      <label htmlFor="campaignData" className="block text-sm font-bold text-gray-800 dark:text-gray-100">
                         1. Paste Your Campaign Data (CSV or plain text)
                       </label>
                       <button
                         type="button"
                         onClick={handleUseExample}
-                        className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+                        className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors duration-150 font-medium"
                       >
                         Use Example Data
                       </button>
@@ -524,31 +545,32 @@ ${campaignData}
                       value={campaignData}
                       onChange={(e) => setCampaignData(e.target.value)}
                       rows="12"
-                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono"
+                      className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-inner bg-gray-50 dark:bg-gray-900 focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-500 text-sm font-mono placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-all"
                       placeholder="Platform,Campaign Name,Spend,Impressions,Clicks..."
                     />
                   </div>
 
                   {/* Analysis Type Radio Buttons */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-3">
-                      2. Select Analysis Type
+                    <label className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-3">
+                      2. Select Analysis Focus
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       {[
-                        { id: 'cross-channel', label: 'Cross-Channel' },
-                        { id: 'ab-test', label: 'A/B Test' },
+                        { id: 'cross-channel', label: 'Cross-Channel (e.g., Meta vs Google)' },
+                        { id: 'ab-test', label: 'A/B Test Comparison' },
                         { id: 'intra-platform-product', label: 'Same Platform (Diff. Products)' },
                         { id: 'intra-platform-campaign', label: 'Same Platform (Same Product)' },
                       ].map((item) => (
                         <label
                           key={item.id}
                           htmlFor={item.id}
-                          className={`flex items-center justify-center text-center p-3 border rounded-md cursor-pointer transition-all duration-200 ${
-                            analysisType === item.id
-                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
-                              : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
-                          }`}
+                          className={`flex items-center justify-center text-center text-xs sm:text-sm p-3 border rounded-lg cursor-pointer transition-all duration-200 shadow-sm
+                            ${
+                              analysisType === item.id
+                                ? 'bg-indigo-600 text-white border-indigo-600 ring-2 ring-indigo-500/50'
+                                : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-indigo-50 dark:hover:bg-gray-600'
+                            }`}
                         >
                           <input
                             type="radio"
@@ -559,7 +581,7 @@ ${campaignData}
                             onChange={(e) => setAnalysisType(e.target.value)}
                             className="sr-only"
                           />
-                          <span className="text-sm font-medium">{item.label}</span>
+                          <span className="font-medium">{item.label}</span>
                         </label>
                       ))}
                     </div>
@@ -567,29 +589,29 @@ ${campaignData}
                   
                   {/* User Query Input */}
                   <div>
-                    <label htmlFor="userQuery" className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                      3. What do you want to analyze?
+                    <label htmlFor="userQuery" className="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-2">
+                      3. What do you want to analyze? (Be specific!)
                     </label>
                     <input
                       type="text"
                       id="userQuery"
                       value={userQuery}
                       onChange={(e) => setUserQuery(e.target.value)}
-                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="e.g., 'Which campaign had the best ROAS?' or 'Why did Variant A win?'"
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                      placeholder="e.g., 'Which campaign had the best ROAS?' or 'Why did Variant A win and what's the industry benchmark for CPA?'"
                     />
                   </div>
 
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={isLoading}
-                    className="w-full flex items-center justify-center p-4 bg-indigo-600 text-white font-semibold rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    disabled={isLoading || !campaignData.trim() || !userQuery.trim()}
+                    className="w-full flex items-center justify-center p-4 bg-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transition-all duration-200 disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:cursor-not-allowed transform hover:scale-[1.005]"
                   >
                     {isLoading ? (
                       <Fragment>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Analyzing...
+                        <Loader2 className="w-5 h-5 mr-3 svg-spin-fast" />
+                        Analyzing Campaigns & Fetching Benchmarks...
                       </Fragment>
                     ) : (
                       'Analyze Campaigns'
@@ -599,7 +621,7 @@ ${campaignData}
 
                 {/* Error Message */}
                 {error && (
-                  <div className="mt-6 w-full flex items-center p-4 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-100 animate-fade-in">
+                  <div className="mt-6 w-full flex items-center p-4 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-100 animate-fade-in shadow-md">
                     <AlertTriangle className="w-5 h-5 mr-3 flex-shrink-0" />
                     <span className="font-medium">{error}</span>
                   </div>
@@ -612,7 +634,7 @@ ${campaignData}
                     <div className="mt-4 flex justify-end">
                       <button
                         onClick={handleCopyToClipboard}
-                        className="flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        className="flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors duration-150"
                       >
                         <Copy className="w-4 h-4 mr-2" />
                         {copied ? 'Copied!' : 'Copy Report'}
@@ -643,607 +665,3 @@ ${campaignData}
     </script>
 </body>
 </html>
-<div id="root">
-<!-- React component will render here -->
-</div>
-
-<script type="text/babel">
-const { useState, Fragment, useEffect } = React;
-
-// --- Mock Lucide Icons (Inline SVGs) ---
-// Replacing lucide-react with simple SVG components for single-file portability.
-const SVG_ATTRIBUTES = {
-xmlns: "http://www.w3.org/2000/svg",
-width: "24",
-height: "24",
-viewBox: "0 0 24 24",
-fill: "none",
-stroke: "currentColor",
-strokeWidth: "2",
-strokeLinecap: "round",
-strokeLinejoin: "round",
-};
-
-const BarChart2 = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<line x1="18" y1="20" x2="18" y2="10" />
-<line x1="12" y1="20" x2="12" y2="4" />
-<line x1="6" y1="20" x2="6" y2="14" />
-</svg>
-);
-
-const Target = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<circle cx="12" cy="12" r="10" />
-<circle cx="12" cy="12" r="6" />
-<circle cx="12" cy="12" r="2" />
-</svg>
-);
-
-const Lightbulb = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<path d="M15 14c.2-.9.8-1.7 1.5-2.2a4 4 0 0 0-5.7-5.7 4 4 0 0 0-2.2 1.5" />
-<path d="M11 19h2" />
-<path d="M12 18a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4" />
-</svg>
-);
-
-const CheckCircle = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-<polyline points="22 4 12 14 9 11" />
-</svg>
-);
-
-const ChevronDown = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<polyline points="6 9 12 15 18 9" />
-</svg>
-);
-
-const Loader2 = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<path d="M21 12a9 9 0 1 1-6.21-8.54" />
-</svg>
-);
-
-const AlertTriangle = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-<line x1="12" y1="9" x2="12" y2="13" />
-<line x1="12" y1="17" x2="12.01" y2="17" />
-</svg>
-);
-
-const Search = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<circle cx="11" cy="11" r="8" />
-<line x1="21" y1="21" x2="16.65" y2="16.65" />
-</svg>
-);
-
-const Copy = (props) => (
-<svg {...SVG_ATTRIBUTES} {...props}>
-<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-</svg>
-);
-// --- End Mock Lucide Icons ---
-
-// --- Constants ---
-
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
-// Global variables are automatically provided by the execution environment.
-const API_KEY = "";
-
-const SYSTEM_PROMPT = `You are "AdOpt", an expert-level Marketing Analyst and Data Scientist. Your specialty is analyzing ad campaign data from Google, Meta, and TikTok.
-
-Your task is to analyze the provided campaign data based on the user's selected analysis type and specific query. You MUST generate a concise, insightful, and professional report.
-
-Your report MUST be structured with the following three sections:
-
-1. **Performance Evaluation:**
-* Start by directly answering the user's query.
-* Provide a clear, data-driven summary of campaign performance.
-* Focus on the most relevant key metrics (e.g., ROAS, CPA, CTR, CVR) for their analysis type.
-* For A/B tests, clearly state the winning variant and the statistical significance (or lack thereof, if data is insufficient).
-
-2. **Key Insights:**
-* Provide 2-3 bullet points highlighting *why* the performance was what it was.
-* This is where you connect the dots. (e.g., "- Campaign B's higher CPA is likely linked to its 50% lower CTR, suggesting the creative was less engaging to the target audience.")
-* (e.g., "- TikTok is driving the lowest-cost traffic (low CPC), but Meta is achieving a 3x higher Conversion Rate, indicating better audience-to-product fit.")
-
-3. **Actionable Recommendations:**
-* Provide 2-3 concrete, data-driven suggestions for optimization and sustainable growth.
-* These must be actionable. (e.g., "GOOD: 'Allocate 20% of the TikTok budget to a retargeting campaign on Meta for users who visited the site but didn't purchase.' BAD: 'Improve ROAS.'")
-* **Crucially, use the provided Google Search tool** to find current industry benchmarks (e.g., "average CTR for e-commerce on Google Ads") to contextualize your analysis and make your recommendations stronger. You must cite any sources you use.
-`;
-
-// --- Helper Functions ---
-
-/**
-* A simple helper to copy text to the clipboard.
-* Uses document.execCommand for iframe compatibility.
-* @param {string} text - The text to copy.
-* @returns {Promise<boolean>} - True if successful, false otherwise.
-*/
-const copyToClipboard = (text) => {
-return new Promise((resolve) => {
-try {
-const textArea = document.createElement('textarea');
-textArea.value = text;
-textArea.style.position = 'fixed'; // Avoid scrolling
-textArea.style.opacity = 0;
-document.body.appendChild(textArea);
-textArea.focus();
-textArea.select();
-// document.execCommand('copy') is the preferred method for
-// clipboard operations in the canvas environment.
-const successful = document.execCommand('copy');
-document.body.removeChild(textArea);
-resolve(successful);
-} catch (err) {
-console.error('Clipboard copy failed:', err);
-resolve(false);
-}
-});
-};
-
-/**
-* Parses the raw text response from the LLM into a structured object.
-* @param {string} text - The raw text from the Gemini API.
-* @returns {{evaluation: string, insights: string[], recommendations: string[]}}
-*/
-const parseAnalysis = (text) => {
-const evaluationMatch = text.match(/1\. \*\*Performance Evaluation:\*\*(.*?)(?=2\. \*\*Key Insights:\*\*|$)/s);
-const insightsMatch = text.match(/2\. \*\*Key Insights:\*\*(.*?)(?=3\. \*\*Actionable Recommendations:\*\*|$)/s);
-const recommendationsMatch = text.match(/3\. \*\*Actionable Recommendations:\*\*(.*)/s);
-
-const evaluation = evaluationMatch ? evaluationMatch[1].trim() : "No evaluation provided.";
-
-const parseList = (sectionText) => {
-if (!sectionText) return [];
-return sectionText.trim().split('\n')
-.map(item => item.replace(/^[\s*-–•]+\s*/, '').trim()) // remove bullets/dashes
-.filter(item => item.length > 5); // Filter out empty or noise lines
-};
-
-const insights = parseList(insightsMatch ? insightsMatch[1] : '');
-const recommendations = parseList(recommendationsMatch ? recommendationsMatch[1] : '');
-
-return { evaluation, insights, recommendations };
-};
-
-
-// --- React Components ---
-
-/**
-* A collapsible component to guide the user on data input.
-*/
-const DataGuidance = () => (
-<details className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
-<summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
-<div className="flex items-center space-x-3">
-<CheckCircle className="w-6 h-6 text-indigo-500" />
-<span className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-How to Provide Data for a Perfect Analysis
-</span>
-</div>
-<ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400 transform transition-transform duration-200" />
-</summary>
-<div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-<p className="mb-4 text-gray-700 dark:text-gray-300">
-For the best results, paste your data as plain text. CSV (Comma-Separated Values) format is ideal. The more data you provide, the better the insights!
-</p>
-
-<h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Key Metrics to Include:</h4>
-<ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
-<li>Platform (Google, Meta, etc.)</li>
-<li>Campaign Name</li>
-<li>Spend (Cost)</li>
-<li>Impressions</li>
-<li>Clicks</li>
-<li>CTR (Click-Through Rate)</li>
-<li>Conversions (Purchases, Leads)</li>
-<li>CPA (Cost Per Acquisition)</li>
-<li>CVR (Conversion Rate)</li>
-<li>Revenue (if applicable)</li>
-<li>ROAS (Return on Ad Spend)</li>
-</ul>
-
-<h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">For A/B Tests, also add:</h4>
-<ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mb-6">
-<li><code>Group</code> (e.g., "A", "B", "Control", "Variant")</li>
-<li><code>Variable Tested</code> (e.g., "Headline", "Audience")</li>
-</ul>
-
-<h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Example Format (CSV):</h4>
-<pre className="p-3 bg-gray-100 dark:bg-gray-900 rounded-md text-sm text-gray-800 dark:text-gray-200 overflow-x-auto">
-{`Platform,Campaign Name,Spend,Impressions,Clicks,Conversions,Revenue\n`}
-{`Google,Product Launch - Search,1500,50000,2500,100,6000\n`}
-{`Meta,Product Launch - Video,2000,150000,3000,120,7200\n`}
-{`TikTok,Product Launch - Awareness,1000,500000,5000,80,4000`}
-</pre>
-</div>
-</details>
-);
-
-/**
-* Component to display the final analysis result.
-*/
-const AnalysisResult = ({ result, sources }) => (
-<div className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg animate-fade-in">
-<div className="p-6">
-<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-Campaign Analysis Report
-</h2>
-
-{/* Performance Evaluation */}
-<div className="mb-6">
-<div className="flex items-center space-x-3 mb-3">
-<BarChart2 className="w-6 h-6 text-indigo-500" />
-<h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Performance Evaluation</h3>
-</div>
-<p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-{result.evaluation}
-</p>
-</div>
-
-{/* Key Insights */}
-<div className="mb-6">
-<div className="flex items-center space-x-3 mb-3">
-<Lightbulb className="w-6 h-6 text-yellow-500" />
-<h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Key Insights</h3>
-</div>
-<ul className="space-y-2">
-{result.insights.map((insight, index) => (
-<li key={index} className="flex items-start">
-<span className="flex-shrink-0 w-5 h-5 text-indigo-500 mt-1 mr-3">
-<CheckCircle className="w-5 h-5" />
-</span>
-<span className="text-gray-700 dark:text-gray-300">{insight}</span>
-</li>
-))}
-</ul>
-</div>
-
-{/* Actionable Recommendations */}
-<div className="mb-6">
-<div className="flex items-center space-x-3 mb-3">
-<Target className="w-6 h-6 text-green-500" />
-<h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Actionable Recommendations</h3>
-</div>
-<ul className="space-y-2">
-{result.recommendations.map((rec, index) => (
-<li key={index} className="flex items-start">
-<span className="flex-shrink-0 w-5 h-5 text-green-500 mt-1 mr-3">
-<Target className="w-5 h-5" />
-</span>
-<span className="text-gray-700 dark:text-gray-300">{rec}</span>
-</li>
-))}
-</ul>
-</div>
-
-{/* Sources */}
-{sources && sources.length > 0 && (
-<div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-<div className="flex items-center space-x-3 mb-3">
-<Search className="w-5 h-5 text-gray-500" />
-<h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Sources (from Google Search)</h3>
-</div>
-<ul className="space-y-2">
-{sources.map((source, index) => (
-<li key={index} className="flex items-start">
-<a
-href={source.uri}
-target="_blank"
-rel="noopener noreferrer"
-className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline truncate"
-title={source.title}
->
-{`[${index + 1}] ${source.title}`}
-</a>
-</li>
-))}
-</ul>
-</div>
-)}
-</div>
-</div>
-);
-
-/**
-* Main Application Component
-*/
-function App() {
-const [campaignData, setCampaignData] = useState('');
-const [userQuery, setUserQuery] = useState('');
-const [analysisType, setAnalysisType] = useState('cross-channel');
-const [analysisResult, setAnalysisResult] = useState(null);
-const [sources, setSources] = useState([]);
-const [isLoading, setIsLoading] = useState(false);
-const [error, setError] = useState(null);
-const [copied, setCopied] = useState(false);
-
-// Example data to pre-fill the textarea
-const exampleData = `Platform,Campaign Name,Group,Variable Tested,Spend,Impressions,Clicks,Conversions,Revenue
-Google,Search - Product A - Control,Control,Headline,1000,50000,2000,100,5000
-Google,Search - Product A - Variant,Variant,Headline,1000,52000,2500,130,6500
-Meta,Video - Product B,N/A,N/A,1500,200000,4000,150,7500
-TikTok,Awareness - Product B,N/A,N/A,800,700000,7000,80,3200
-Meta,LeadGen - Service C,N/A,N/A,1200,80000,1000,200,N/A
-`;
-
-const handleUseExample = () => {
-setCampaignData(exampleData);
-setUserQuery("Analyze the A/B test for Product A. Also, compare the performance of Product B campaigns on Meta vs. TikTok.");
-setAnalysisType('ab-test');
-};
-
-const handleCopyToClipboard = () => {
-if (!analysisResult) return;
-
-const textToCopy = `
-Performance Evaluation:
-${analysisResult.evaluation}
-
-Key Insights:
-${analysisResult.insights.map(i => `- ${i}`).join('\n')}
-
-Actionable Recommendations:
-${analysisResult.recommendations.map(r => `- ${r}`).join('\n')}
-
-Sources:
-${sources.map((s, index) => `[${index + 1}] ${s.title}: ${s.uri}`).join('\n')}
-`;
-
-copyToClipboard(textToCopy.trim()).then((success) => {
-if (success) {
-setCopied(true);
-setTimeout(() => setCopied(false), 2000);
-}
-});
-};
-
-/**
-* Main function to call the Gemini API.
-* Includes exponential backoff retry logic.
-*/
-const handleSubmit = async (e) => {
-e.preventDefault();
-if (!campaignData.trim() || !userQuery.trim()) {
-setError('Please provide both campaign data and a specific query.');
-return;
-}
-
-setIsLoading(true);
-setError(null);
-setAnalysisResult(null);
-setSources([]);
-
-const analysisPrompt = `
-Analysis Type: ${analysisType}
-User Query: ${userQuery}
-
-Campaign Data:
-${campaignData}
-`;
-
-const payload = {
-contents: [{ parts: [{ text: analysisPrompt }] }],
-systemInstruction: {
-parts: [{ text: SYSTEM_PROMPT }]
-},
-tools: [{ "google_search": {} }],
-};
-
-let retries = 3;
-let delay = 1000;
-let success = false;
-
-while (retries > 0 && !success) {
-try {
-const response = await fetch(GEMINI_API_URL + API_KEY, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-},
-body: JSON.stringify(payload),
-});
-
-if (!response.ok) {
-if (response.status === 429) {
-throw new Error('Rate limit exceeded. Retrying...');
-}
-throw new Error(`API Error: ${response.status} ${response.statusText}`);
-}
-
-const result = await response.json();
-const candidate = result.candidates?.[0];
-
-if (candidate && candidate.content?.parts?.[0]?.text) {
-const rawText = candidate.content.parts[0].text;
-const parsedData = parseAnalysis(rawText);
-setAnalysisResult(parsedData);
-
-// Extract grounding sources
-const groundingMetadata = candidate.groundingMetadata;
-if (groundingMetadata && groundingMetadata.groundingAttributions) {
-const validSources = groundingMetadata.groundingAttributions
-.map(attr => ({
-uri: attr.web?.uri,
-title: attr.web?.title,
-}))
-.filter(source => source.uri && source.title);
-setSources(validSources);
-}
-
-success = true;
-} else {
-throw new Error('Invalid response structure from API. Content missing.');
-}
-
-} catch (err) {
-console.error(err);
-retries--;
-if (retries === 0) {
-setError(`Failed to get analysis after multiple attempts. Error: ${err.message}`);
-} else {
-// Exponential backoff
-await new Promise(resolve => setTimeout(resolve, delay));
-delay *= 2;
-}
-}
-}
-
-setIsLoading(false);
-};
-
-return (
-<div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-inter p-4 sm:p-8">
-
-<div className="max-w-5xl mx-auto">
-<header className="text-center mb-8">
-<h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-3">
-AdOpt <span className="text-indigo-500">AI Campaign Analyzer</span>
-</h1>
-<p className="text-lg text-gray-600 dark:text-gray-400">
-Paste your campaign data, ask a question, and get expert analysis for sustainable growth.
-</p>
-</header>
-
-{/* Data Guidance Component */}
-<DataGuidance />
-
-{/* Main Form */}
-<form onSubmit={handleSubmit} className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-6 sm:p-8 space-y-6">
-
-{/* Campaign Data Textarea */}
-<div>
-<div className="flex justify-between items-center mb-2">
-<label htmlFor="campaignData" className="block text-sm font-semibold text-gray-800 dark:text-gray-100">
-1. Paste Your Campaign Data (CSV or plain text)
-</label>
-<button
-type="button"
-onClick={handleUseExample}
-className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
->
-Use Example Data
-</button>
-</div>
-<textarea
-id="campaignData"
-value={campaignData}
-onChange={(e) => setCampaignData(e.target.value)}
-rows="12"
-className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono"
-placeholder="Platform,Campaign Name,Spend,Impressions,Clicks..."
-/>
-</div>
-
-{/* Analysis Type Radio Buttons */}
-<div>
-<label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-3">
-2. Select Analysis Type
-</label>
-<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-{[
-{ id: 'cross-channel', label: 'Cross-Channel' },
-{ id: 'ab-test', label: 'A/B Test' },
-{ id: 'intra-platform-product', label: 'Same Platform (Diff. Products)' },
-{ id: 'intra-platform-campaign', label: 'Same Platform (Same Product)' },
-].map((item) => (
-<label
-key={item.id}
-htmlFor={item.id}
-className={`flex items-center justify-center text-center p-3 border rounded-md cursor-pointer transition-all duration-200 ${
-analysisType === item.id
-? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
-: 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
-}`}
->
-<input
-type="radio"
-id={item.id}
-name="analysisType"
-value={item.id}
-checked={analysisType === item.id}
-onChange={(e) => setAnalysisType(e.target.value)}
-className="sr-only"
-/>
-<span className="text-sm font-medium">{item.label}</span>
-</label>
-))}
-</div>
-</div>
-
-{/* User Query Input */}
-<div>
-<label htmlFor="userQuery" className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
-3. What do you want to analyze?
-</label>
-<input
-type="text"
-id="userQuery"
-value={userQuery}
-onChange={(e) => setUserQuery(e.target.value)}
-className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-placeholder="e.g., 'Which campaign had the best ROAS?' or 'Why did Variant A win?'"
-/>
-</div>
-
-{/* Submit Button */}
-<button
-type="submit"
-disabled={isLoading}
-className="w-full flex items-center justify-center p-4 bg-indigo-600 text-white font-semibold rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
->
-{isLoading ? (
-<Fragment>
-<Loader2 className="w-5 h-5 mr-2 animate-spin" />
-Analyzing...
-</Fragment>
-) : (
-'Analyze Campaigns'
-)}
-</button>
-</form>
-
-{/* Error Message */}
-{error && (
-<div className="mt-6 w-full flex items-center p-4 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-100 animate-fade-in">
-<AlertTriangle className="w-5 h-5 mr-3 flex-shrink-0" />
-<span className="font-medium">{error}</span>
-</div>
-)}
-
-{/* Results */}
-{analysisResult && (
-<Fragment>
-<AnalysisResult result={analysisResult} sources={sources} />
-<div className="mt-4 flex justify-end">
-<button
-onClick={handleCopyToClipboard}
-className="flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
->
-<Copy className="w-4 h-4 mr-2" />
-{copied ? 'Copied!' : 'Copy Report'}
-</button>
-</div>
-</Fragment>
-)}
-</div>
-</div>
-);
-}
-
-// --- FIX: Use modern createRoot API for React 18 to remove deprecation warning ---
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(<App />);
-</script>
-</body>
-</html>
-
