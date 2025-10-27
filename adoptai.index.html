@@ -1,0 +1,1360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 6.4.7.2 (Linux)"/>
+	<meta name="created" content="2025-10-27T15:29:18.459425462"/>
+	<meta name="changed" content="2025-10-27T15:29:56.921809952"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 0.79in }
+		p { margin-bottom: 0.1in; line-height: 115%; background: transparent }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><p style="margin-bottom: 0in; line-height: 100%">
+&lt;!DOCTYPE html&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">&lt;html lang=&quot;en&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">&lt;head&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;meta
+charset=&quot;UTF-8&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;meta
+name=&quot;viewport&quot; content=&quot;width=device-width,
+initial-scale=1.0&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;title&gt;AdOpt
+AI Campaign Analyzer&lt;/title&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;!-- Load
+Tailwind CSS --&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;script
+src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;!-- Load
+React and ReactDOM --&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;script
+src=&quot;https://unpkg.com/react@18/umd/react.development.js&quot;&gt;&lt;/script&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;script
+src=&quot;https://unpkg.com/react-dom@18/umd/react-dom.development.js&quot;&gt;&lt;/script&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;!-- Load
+Babel to process JSX --&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;script
+src=&quot;https://unpkg.com/@babel/standalone/babel.min.js&quot;&gt;&lt;/script&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;style&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /* Define
+Inter font and dark mode styles */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        @import
+url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap');</p>
+<p style="margin-bottom: 0in; line-height: 100%">        body {
+font-family: 'Inter', sans-serif; }</p>
+<p style="margin-bottom: 0in; line-height: 100%">        
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /* Custom
+animations */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        @keyframes
+fade-in {</p>
+<p style="margin-bottom: 0in; line-height: 100%">            from {
+opacity: 0; transform: translateY(10px); }</p>
+<p style="margin-bottom: 0in; line-height: 100%">            to {
+opacity: 1; transform: translateY(0); }</p>
+<p style="margin-bottom: 0in; line-height: 100%">        }</p>
+<p style="margin-bottom: 0in; line-height: 100%">       
+.animate-fade-in { animation: fade-in 0.5s ease-out forwards; }</p>
+<p style="margin-bottom: 0in; line-height: 100%">       
+details[open] summary ~ * { animation: fade-in 0.3s ease-out; }</p>
+<p style="margin-bottom: 0in; line-height: 100%">       
+details[open] summary svg:last-child { transform: rotate(180deg); }</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /* Loader
+animation */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        @keyframes
+spin {</p>
+<p style="margin-bottom: 0in; line-height: 100%">          to {
+transform: rotate(360deg); }</p>
+<p style="margin-bottom: 0in; line-height: 100%">        }</p>
+<p style="margin-bottom: 0in; line-height: 100%">       
+.animate-spin { animation: spin 1s linear infinite; }</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;/style&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">&lt;/head&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">&lt;body
+class=&quot;bg-gray-100 dark:bg-gray-900&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;div
+id=&quot;root&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        &lt;!--
+React component will render here --&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;script
+type=&quot;text/babel&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const {
+useState, Fragment, useEffect } = React;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // --- Mock
+Lucide Icons (Inline SVGs) ---</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // Replacing
+lucide-react with simple SVG components for single-file portability.</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+SVG_ATTRIBUTES = {</p>
+<p style="margin-bottom: 0in; line-height: 100%">            xmlns:
+&quot;http://www.w3.org/2000/svg&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">            width:
+&quot;24&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">            height:
+&quot;24&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">            viewBox:
+&quot;0 0 24 24&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">            fill:
+&quot;none&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">            stroke:
+&quot;currentColor&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+strokeWidth: &quot;2&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+strokeLinecap: &quot;round&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+strokeLinejoin: &quot;round&quot;,</p>
+<p style="margin-bottom: 0in; line-height: 100%">        };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+BarChart2 = (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;line x1=&quot;18&quot; y1=&quot;20&quot; x2=&quot;18&quot;
+y2=&quot;10&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;line x1=&quot;12&quot; y1=&quot;20&quot; x2=&quot;12&quot; y2=&quot;4&quot;
+/&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;line x1=&quot;6&quot; y1=&quot;20&quot; x2=&quot;6&quot; y2=&quot;14&quot;
+/&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const Target
+= (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;10&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;6&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;2&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+Lightbulb = (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M15 14c.2-.9.8-1.7 1.5-2.2a4 4 0 0 0-5.7-5.7 4 4 0 0
+0-2.2 1.5&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M11 19h2&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M12 18a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+CheckCircle = (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M22 11.08V12a10 10 0 1 1-5.93-9.14&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;polyline points=&quot;22 4 12 14 9 11&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+ChevronDown = (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;polyline points=&quot;6 9 12 15 18 9&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+Loader2 = (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M21 12a9 9 0 1 1-6.21-8.54&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+AlertTriangle = (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0
+1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;line x1=&quot;12&quot; y1=&quot;9&quot; x2=&quot;12&quot; y2=&quot;13&quot;
+/&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;line x1=&quot;12&quot; y1=&quot;17&quot; x2=&quot;12.01&quot;
+y2=&quot;17&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const Search
+= (props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;circle cx=&quot;11&quot; cy=&quot;11&quot; r=&quot;8&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;line x1=&quot;21&quot; y1=&quot;21&quot; x2=&quot;16.65&quot;
+y2=&quot;16.65&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const Copy =
+(props) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;svg
+{...SVG_ATTRIBUTES} {...props}&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;rect x=&quot;9&quot; y=&quot;9&quot; width=&quot;13&quot;
+height=&quot;13&quot; rx=&quot;2&quot; ry=&quot;2&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;path d=&quot;M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2
+2v1&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/svg&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // --- End
+Mock Lucide Icons ---</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // ---
+Constants ---</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+GEMINI_API_URL =
+&quot;https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=&quot;;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // Global
+variables are automatically provided by the execution environment.</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+API_KEY = &quot;&quot;; 
+</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+SYSTEM_PROMPT = `You are &quot;AdOpt&quot;, an expert-level Marketing
+Analyst and Data Scientist. Your specialty is analyzing ad campaign
+data from Google, Meta, and TikTok.</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">Your task is to
+analyze the provided campaign data based on the user's selected
+analysis type and specific query. You MUST generate a concise,
+insightful, and professional report.</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">Your report MUST be
+structured with the following three sections:</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">1.  **Performance
+Evaluation:**</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * Start by
+directly answering the user's query.</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * Provide a
+clear, data-driven summary of campaign performance.</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * Focus on the
+most relevant key metrics (e.g., ROAS, CPA, CTR, CVR) for their
+analysis type.</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * For A/B tests,
+clearly state the winning variant and the statistical significance
+(or lack thereof, if data is insufficient).</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">2.  **Key
+Insights:**</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * Provide 2-3
+bullet points highlighting *why* the performance was what it was.</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * This is where
+you connect the dots. (e.g., &quot;- Campaign B's higher CPA is
+likely linked to its 50% lower CTR, suggesting the creative was less
+engaging to the target audience.&quot;)</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * (e.g., &quot;-
+TikTok is driving the lowest-cost traffic (low CPC), but Meta is
+achieving a 3x higher Conversion Rate, indicating better
+audience-to-product fit.&quot;)</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">3.  **Actionable
+Recommendations:**</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * Provide 2-3
+concrete, data-driven suggestions for optimization and sustainable
+growth.</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * These must be
+actionable. (e.g., &quot;GOOD: 'Allocate 20% of the TikTok budget to
+a retargeting campaign on Meta for users who visited the site but
+didn't purchase.' BAD: 'Improve ROAS.'&quot;)</p>
+<p style="margin-bottom: 0in; line-height: 100%">    * **Crucially,
+use the provided Google Search tool** to find current industry
+benchmarks (e.g., &quot;average CTR for e-commerce on Google Ads&quot;)
+to contextualize your analysis and make your recommendations
+stronger. You must cite any sources you use.</p>
+<p style="margin-bottom: 0in; line-height: 100%">`;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // ---
+Helper Functions ---</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /**</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * A simple
+helper to copy text to the clipboard.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * Uses
+document.execCommand for iframe compatibility.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * @param
+{string} text - The text to copy.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * @returns
+{Promise&lt;boolean&gt;} - True if successful, false otherwise.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+copyToClipboard = (text) =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">          return new
+Promise((resolve) =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">            try {</p>
+<p style="margin-bottom: 0in; line-height: 100%">              const
+textArea = document.createElement('textarea');</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+textArea.value = text;</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+textArea.style.position = 'fixed'; // Avoid scrolling</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+textArea.style.opacity = 0;</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+document.body.appendChild(textArea);</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+textArea.focus();</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+textArea.select();</p>
+<p style="margin-bottom: 0in; line-height: 100%">              //
+document.execCommand('copy') is the preferred method for</p>
+<p style="margin-bottom: 0in; line-height: 100%">              //
+clipboard operations in the canvas environment.</p>
+<p style="margin-bottom: 0in; line-height: 100%">              const
+successful = document.execCommand('copy'); 
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+document.body.removeChild(textArea);</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+resolve(successful);</p>
+<p style="margin-bottom: 0in; line-height: 100%">            } catch
+(err) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+console.error('Clipboard copy failed:', err);</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+resolve(false);</p>
+<p style="margin-bottom: 0in; line-height: 100%">            }</p>
+<p style="margin-bottom: 0in; line-height: 100%">          });</p>
+<p style="margin-bottom: 0in; line-height: 100%">        };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /**</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * Parses
+the raw text response from the LLM into a structured object.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * @param
+{string} text - The raw text from the Gemini API.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * @returns
+{{evaluation: string, insights: string[], recommendations: string[]}}</p>
+<p style="margin-bottom: 0in; line-height: 100%">         */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+parseAnalysis = (text) =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+evaluationMatch = text.match(/1\. \*\*Performance
+Evaluation:\*\*(.*?)(?=2\. \*\*Key Insights:\*\*|$)/s);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+insightsMatch = text.match(/2\. \*\*Key Insights:\*\*(.*?)(?=3\.
+\*\*Actionable Recommendations:\*\*|$)/s);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+recommendationsMatch = text.match(/3\. \*\*Actionable
+Recommendations:\*\*(.*)/s);</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+evaluation = evaluationMatch ? evaluationMatch[1].trim() : &quot;No
+evaluation provided.&quot;;</p>
+<p style="margin-bottom: 0in; line-height: 100%">          
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+parseList = (sectionText) =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">            if
+(!sectionText) return [];</p>
+<p style="margin-bottom: 0in; line-height: 100%">            return
+sectionText.trim().split('\n')</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+.map(item =&gt; item.replace(/^[\s*-–•]+\s*/, '').trim()) //
+remove bullets/dashes</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+.filter(item =&gt; item.length &gt; 5); // Filter out empty or noise
+lines</p>
+<p style="margin-bottom: 0in; line-height: 100%">          };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+insights = parseList(insightsMatch ? insightsMatch[1] : '');</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+recommendations = parseList(recommendationsMatch ?
+recommendationsMatch[1] : '');</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          return {
+evaluation, insights, recommendations };</p>
+<p style="margin-bottom: 0in; line-height: 100%">        };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // --- React
+Components ---</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /**</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * A
+collapsible component to guide the user on data input.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+DataGuidance = () =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">          &lt;details
+className=&quot;w-full bg-white dark:bg-gray-800 border
+border-gray-200 dark:border-gray-700 rounded-lg shadow-sm
+overflow-hidden&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;summary
+className=&quot;flex items-center justify-between p-4 cursor-pointer
+hover:bg-gray-50 dark:hover:bg-gray-700&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;div
+className=&quot;flex items-center space-x-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;CheckCircle className=&quot;w-6 h-6 text-indigo-500&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;span className=&quot;text-lg font-semibold text-gray-800
+dark:text-gray-100&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+How to Provide Data for a Perfect Analysis</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+&lt;ChevronDown className=&quot;w-5 h-5 text-gray-500
+dark:text-gray-400 transform transition-transform duration-200&quot;
+/&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+&lt;/summary&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;div
+className=&quot;p-6 border-t border-gray-200 dark:border-gray-700
+bg-gray-50 dark:bg-gray-800&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;p
+className=&quot;mb-4 text-gray-700 dark:text-gray-300&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                For
+the best results, paste your data as plain text. CSV (Comma-Separated
+Values) format is ideal. The more data you provide, the better the
+insights!</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/p&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;h4
+className=&quot;font-semibold text-gray-800 dark:text-gray-100
+mb-2&quot;&gt;Key Metrics to Include:&lt;/h4&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;ul
+className=&quot;grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2
+list-disc list-inside text-gray-700 dark:text-gray-300 mb-4&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Platform (Google, Meta, etc.)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Campaign Name&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Spend (Cost)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Impressions&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Clicks&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;CTR (Click-Through Rate)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Conversions (Purchases, Leads)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;CPA (Cost Per Acquisition)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;CVR (Conversion Rate)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;Revenue (if applicable)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;ROAS (Return on Ad Spend)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/ul&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;h4
+className=&quot;font-semibold text-gray-800 dark:text-gray-100
+mb-2&quot;&gt;For A/B Tests, also add:&lt;/h4&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;ul
+className=&quot;list-disc list-inside text-gray-700
+dark:text-gray-300 mb-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;&lt;code&gt;Group&lt;/code&gt; (e.g., &quot;A&quot;, &quot;B&quot;,
+&quot;Control&quot;, &quot;Variant&quot;)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;li&gt;&lt;code&gt;Variable Tested&lt;/code&gt; (e.g., &quot;Headline&quot;,
+&quot;Audience&quot;)&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/ul&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;h4
+className=&quot;font-semibold text-gray-800 dark:text-gray-100
+mb-2&quot;&gt;Example Format (CSV):&lt;/h4&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;pre
+className=&quot;p-3 bg-gray-100 dark:bg-gray-900 rounded-md text-sm
+text-gray-800 dark:text-gray-200 overflow-x-auto&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+{`Platform,Campaign
+Name,Spend,Impressions,Clicks,Conversions,Revenue\n`}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+{`Google,Product Launch - Search,1500,50000,2500,100,6000\n`}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+{`Meta,Product Launch - Video,2000,150000,3000,120,7200\n`}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+{`TikTok,Product Launch - Awareness,1000,500000,5000,80,4000`}</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/pre&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">          &lt;/details&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /**</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * Component
+to display the final analysis result.</p>
+<p style="margin-bottom: 0in; line-height: 100%">         */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+AnalysisResult = ({ result, sources }) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">          &lt;div
+className=&quot;mt-8 w-full bg-white dark:bg-gray-800 border
+border-gray-200 dark:border-gray-700 rounded-lg shadow-lg
+animate-fade-in&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;div
+className=&quot;p-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;h2
+className=&quot;text-2xl font-bold text-gray-900 dark:text-white
+mb-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+Campaign Analysis Report</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/h2&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              {/*
+Performance Evaluation */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;div
+className=&quot;mb-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;div
+className=&quot;flex items-center space-x-3 mb-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;BarChart2 className=&quot;w-6 h-6 text-indigo-500&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;h3 className=&quot;text-xl font-semibold text-gray-800
+dark:text-gray-100&quot;&gt;Performance Evaluation&lt;/h3&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;p
+className=&quot;text-gray-700 dark:text-gray-300 leading-relaxed&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{result.evaluation}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;/p&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              {/*
+Key Insights */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;div
+className=&quot;mb-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;div
+className=&quot;flex items-center space-x-3 mb-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;Lightbulb className=&quot;w-6 h-6 text-yellow-500&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;h3 className=&quot;text-xl font-semibold text-gray-800
+dark:text-gray-100&quot;&gt;Key Insights&lt;/h3&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;ul
+className=&quot;space-y-2&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{result.insights.map((insight, index) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;li key={index} className=&quot;flex items-start&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;span className=&quot;flex-shrink-0 w-5 h-5 text-indigo-500 mt-1
+mr-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;CheckCircle className=&quot;w-5 h-5&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;span className=&quot;text-gray-700
+dark:text-gray-300&quot;&gt;{insight}&lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+))}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/ul&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              {/*
+Actionable Recommendations */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;div
+className=&quot;mb-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;div
+className=&quot;flex items-center space-x-3 mb-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;Target className=&quot;w-6 h-6 text-green-500&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;h3 className=&quot;text-xl font-semibold text-gray-800
+dark:text-gray-100&quot;&gt;Actionable Recommendations&lt;/h3&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;ul
+className=&quot;space-y-2&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{result.recommendations.map((rec, index) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;li key={index} className=&quot;flex items-start&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;span className=&quot;flex-shrink-0 w-5 h-5 text-green-500 mt-1
+mr-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;Target className=&quot;w-5 h-5&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;span className=&quot;text-gray-700
+dark:text-gray-300&quot;&gt;{rec}&lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+))}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/ul&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              {/*
+Sources */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+{sources &amp;&amp; sources.length &gt; 0 &amp;&amp; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                &lt;div
+className=&quot;pt-6 border-t border-gray-200 dark:border-gray-700&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;div className=&quot;flex items-center space-x-3 mb-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;Search className=&quot;w-5 h-5 text-gray-500&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;h3 className=&quot;text-lg font-semibold text-gray-800
+dark:text-gray-100&quot;&gt;Sources (from Google Search)&lt;/h3&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;ul className=&quot;space-y-2&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+{sources.map((source, index) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;li key={index} className=&quot;flex items-start&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;a 
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     href={source.uri} 
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     target=&quot;_blank&quot; 
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     rel=&quot;noopener noreferrer&quot; 
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     className=&quot;text-sm text-indigo-600 dark:text-indigo-400
+hover:underline truncate&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     title={source.title}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     {`[${index + 1}] ${source.title}`}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;/a&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/li&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+))}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/ul&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              )}</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">          &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">        );</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        /**</p>
+<p style="margin-bottom: 0in; line-height: 100%">         * Main
+Application Component</p>
+<p style="margin-bottom: 0in; line-height: 100%">         */</p>
+<p style="margin-bottom: 0in; line-height: 100%">        function
+App() {</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[campaignData, setCampaignData] = useState('');</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[userQuery, setUserQuery] = useState('');</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[analysisType, setAnalysisType] = useState('cross-channel');</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[analysisResult, setAnalysisResult] = useState(null);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[sources, setSources] = useState([]);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[isLoading, setIsLoading] = useState(false);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[error, setError] = useState(null);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+[copied, setCopied] = useState(false);</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          // Example
+data to pre-fill the textarea</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+exampleData = `Platform,Campaign Name,Group,Variable
+Tested,Spend,Impressions,Clicks,Conversions,Revenue</p>
+<p style="margin-bottom: 0in; line-height: 100%">Google,Search -
+Product A - Control,Control,Headline,1000,50000,2000,100,5000</p>
+<p style="margin-bottom: 0in; line-height: 100%">Google,Search -
+Product A - Variant,Variant,Headline,1000,52000,2500,130,6500</p>
+<p style="margin-bottom: 0in; line-height: 100%">Meta,Video - Product
+B,N/A,N/A,1500,200000,4000,150,7500</p>
+<p style="margin-bottom: 0in; line-height: 100%">TikTok,Awareness -
+Product B,N/A,N/A,800,700000,7000,80,3200</p>
+<p style="margin-bottom: 0in; line-height: 100%">Meta,LeadGen -
+Service C,N/A,N/A,1200,80000,1000,200,N/A</p>
+<p style="margin-bottom: 0in; line-height: 100%">`;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+handleUseExample = () =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setCampaignData(exampleData);</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setUserQuery(&quot;Analyze the A/B test for Product A. Also, compare
+the performance of Product B campaigns on Meta vs. TikTok.&quot;);</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setAnalysisType('ab-test');</p>
+<p style="margin-bottom: 0in; line-height: 100%">          };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+handleCopyToClipboard = () =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">            if
+(!analysisResult) return;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">            const
+textToCopy = `</p>
+<p style="margin-bottom: 0in; line-height: 100%">Performance
+Evaluation:</p>
+<p style="margin-bottom: 0in; line-height: 100%">${analysisResult.evaluation}</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">Key Insights:</p>
+<p style="margin-bottom: 0in; line-height: 100%">${analysisResult.insights.map(i
+=&gt; `- ${i}`).join('\n')}</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">Actionable
+Recommendations:</p>
+<p style="margin-bottom: 0in; line-height: 100%">${analysisResult.recommendations.map(r
+=&gt; `- ${r}`).join('\n')}</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">Sources:</p>
+<p style="margin-bottom: 0in; line-height: 100%">${sources.map((s,
+index) =&gt; `[${index + 1}] ${s.title}: ${s.uri}`).join('\n')}</p>
+<p style="margin-bottom: 0in; line-height: 100%">            `;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+copyToClipboard(textToCopy.trim()).then((success) =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">              if
+(success) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+setCopied(true);</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+setTimeout(() =&gt; setCopied(false), 2000);</p>
+<p style="margin-bottom: 0in; line-height: 100%">              }</p>
+<p style="margin-bottom: 0in; line-height: 100%">            });</p>
+<p style="margin-bottom: 0in; line-height: 100%">          };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          /**</p>
+<p style="margin-bottom: 0in; line-height: 100%">           * Main
+function to call the Gemini API.</p>
+<p style="margin-bottom: 0in; line-height: 100%">           *
+Includes exponential backoff retry logic.</p>
+<p style="margin-bottom: 0in; line-height: 100%">           */</p>
+<p style="margin-bottom: 0in; line-height: 100%">          const
+handleSubmit = async (e) =&gt; {</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+e.preventDefault();</p>
+<p style="margin-bottom: 0in; line-height: 100%">            if
+(!campaignData.trim() || !userQuery.trim()) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+setError('Please provide both campaign data and a specific query.');</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+return;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            }</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setIsLoading(true);</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setError(null);</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setAnalysisResult(null);</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setSources([]);</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">            const
+analysisPrompt = `</p>
+<p style="margin-bottom: 0in; line-height: 100%">Analysis Type:
+${analysisType}</p>
+<p style="margin-bottom: 0in; line-height: 100%">User Query:
+${userQuery}</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">Campaign Data:</p>
+<p style="margin-bottom: 0in; line-height: 100%">${campaignData}</p>
+<p style="margin-bottom: 0in; line-height: 100%">`;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">            const
+payload = {</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+contents: [{ parts: [{ text: analysisPrompt }] }],</p>
+<p style="margin-bottom: 0in; line-height: 100%">             
+systemInstruction: {</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+parts: [{ text: SYSTEM_PROMPT }]</p>
+<p style="margin-bottom: 0in; line-height: 100%">              },</p>
+<p style="margin-bottom: 0in; line-height: 100%">              tools:
+[{ &quot;google_search&quot;: {} }],</p>
+<p style="margin-bottom: 0in; line-height: 100%">            };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">            let
+retries = 3;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            let
+delay = 1000;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            let
+success = false;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">            while
+(retries &gt; 0 &amp;&amp; !success) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">              try {</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+const response = await fetch(GEMINI_API_URL + API_KEY, {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+method: 'POST',</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+headers: {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+'Content-Type': 'application/json',</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  },</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+body: JSON.stringify(payload),</p>
+<p style="margin-bottom: 0in; line-height: 100%">                });</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                if
+(!response.ok) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  if
+(response.status === 429) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+throw new Error('Rate limit exceeded. Retrying...');</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  }</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+throw new Error(`API Error: ${response.status}
+${response.statusText}`);</p>
+<p style="margin-bottom: 0in; line-height: 100%">                }</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+const result = await response.json();</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+const candidate = result.candidates?.[0];</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                if
+(candidate &amp;&amp; candidate.content?.parts?.[0]?.text) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+const rawText = candidate.content.parts[0].text;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+const parsedData = parseAnalysis(rawText);</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+setAnalysisResult(parsedData);</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  //
+Extract grounding sources</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+const groundingMetadata = candidate.groundingMetadata;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  if
+(groundingMetadata &amp;&amp;
+groundingMetadata.groundingAttributions) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+const validSources = groundingMetadata.groundingAttributions</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ .map(attr =&gt; ({</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   uri: attr.web?.uri,</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   title: attr.web?.title,</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ }))</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ .filter(source =&gt; source.uri &amp;&amp; source.title);</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+setSources(validSources);</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  }</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+success = true;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                }
+else {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+throw new Error('Invalid response structure from API. Content
+missing.');</p>
+<p style="margin-bottom: 0in; line-height: 100%">                }</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              }
+catch (err) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+console.error(err);</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+retries--;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                if
+(retries === 0) {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+setError(`Failed to get analysis after multiple attempts. Error:
+${err.message}`);</p>
+<p style="margin-bottom: 0in; line-height: 100%">                }
+else {</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  //
+Exponential backoff</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+await new Promise(resolve =&gt; setTimeout(resolve, delay));</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+delay *= 2;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                }</p>
+<p style="margin-bottom: 0in; line-height: 100%">              }</p>
+<p style="margin-bottom: 0in; line-height: 100%">            }</p>
+<p style="margin-bottom: 0in; line-height: 100%">            
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">           
+setIsLoading(false);</p>
+<p style="margin-bottom: 0in; line-height: 100%">          };</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">          return (</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;div
+className=&quot;min-h-screen bg-gray-100 dark:bg-gray-900
+text-gray-900 dark:text-gray-100 font-inter p-4 sm:p-8&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">              
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;div
+className=&quot;max-w-5xl mx-auto&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;header className=&quot;text-center mb-8&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;h1 className=&quot;text-4xl sm:text-5xl font-extrabold
+text-gray-900 dark:text-white mb-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+AdOpt &lt;span className=&quot;text-indigo-500&quot;&gt;AI Campaign
+Analyzer&lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/h1&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  &lt;p
+className=&quot;text-lg text-gray-600 dark:text-gray-400&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+Paste your campaign data, ask a question, and get expert analysis for
+sustainable growth.</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/p&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/header&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                {/*
+Data Guidance Component */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;DataGuidance /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                {/*
+Main Form */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;form onSubmit={handleSubmit} className=&quot;mt-8 w-full bg-white
+dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+rounded-lg shadow-lg p-6 sm:p-8 space-y-6&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{/* Campaign Data Textarea */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;div className=&quot;flex justify-between items-center mb-2&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;label htmlFor=&quot;campaignData&quot; className=&quot;block
+text-sm font-semibold text-gray-800 dark:text-gray-100&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   1. Paste Your Campaign Data (CSV or plain text)</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/label&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;button</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   type=&quot;button&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   onClick={handleUseExample}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   className=&quot;text-sm text-indigo-600 dark:text-indigo-400
+hover:underline font-medium&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   Use Example Data</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/button&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;textarea</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ id=&quot;campaignData&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ value={campaignData}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ onChange={(e) =&gt; setCampaignData(e.target.value)}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ rows=&quot;12&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ className=&quot;w-full p-3 border border-gray-300
+dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900
+focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm
+font-mono&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ placeholder=&quot;Platform,Campaign
+Name,Spend,Impressions,Clicks...&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+/&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{/* Analysis Type Radio Buttons */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;label className=&quot;block text-sm font-semibold text-gray-800
+dark:text-gray-100 mb-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ 2. Select Analysis Type</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/label&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;div className=&quot;grid grid-cols-2 sm:grid-cols-4 gap-3&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ {[</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   { id: 'cross-channel', label: 'Cross-Channel' },</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   { id: 'ab-test', label: 'A/B Test' },</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   { id: 'intra-platform-product', label: 'Same Platform (Diff.
+Products)' },</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   { id: 'intra-platform-campaign', label: 'Same Platform (Same
+Product)' },</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ ].map((item) =&gt; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;label</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     key={item.id}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     htmlFor={item.id}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     className={`flex items-center justify-center text-center p-3
+border rounded-md cursor-pointer transition-all duration-200 ${</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       analysisType === item.id</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+         ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+         : 'bg-white dark:bg-gray-700 border-gray-300
+dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     }`}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     &lt;input</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       type=&quot;radio&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       id={item.id}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       name=&quot;analysisType&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       value={item.id}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       checked={analysisType === item.id}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       onChange={(e) =&gt; setAnalysisType(e.target.value)}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+       className=&quot;sr-only&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+     &lt;span className=&quot;text-sm
+font-medium&quot;&gt;{item.label}&lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;/label&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ ))}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{/* User Query Input */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;label htmlFor=&quot;userQuery&quot; className=&quot;block text-sm
+font-semibold text-gray-800 dark:text-gray-100 mb-2&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ 3. What do you want to analyze?</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/label&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;input</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ type=&quot;text&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ id=&quot;userQuery&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ value={userQuery}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ onChange={(e) =&gt; setUserQuery(e.target.value)}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ className=&quot;w-full p-3 border border-gray-300
+dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900
+focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ placeholder=&quot;e.g., 'Which campaign had the best ROAS?' or 'Why
+did Variant A win?'&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+/&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+{/* Submit Button */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;button</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+type=&quot;submit&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+disabled={isLoading}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+className=&quot;w-full flex items-center justify-center p-4
+bg-indigo-600 text-white font-semibold rounded-md shadow-lg
+hover:bg-indigo-700 focus:outline-none focus:ring-2
+focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100
+dark:focus:ring-offset-gray-800 transition-all duration-200
+disabled:bg-gray-400 disabled:cursor-not-allowed&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                  &gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+{isLoading ? (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;Fragment&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;Loader2 className=&quot;w-5 h-5 mr-2 animate-spin&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   Analyzing...</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/Fragment&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+) : (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ 'Analyze Campaigns'</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+)}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/button&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+&lt;/form&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                {/*
+Error Message */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+{error &amp;&amp; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;div className=&quot;mt-6 w-full flex items-center p-4 bg-red-100
+dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-lg
+text-red-700 dark:text-red-100 animate-fade-in&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;AlertTriangle className=&quot;w-5 h-5 mr-3 flex-shrink-0&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;span className=&quot;font-medium&quot;&gt;{error}&lt;/span&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                )}</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">                {/*
+Results */}</p>
+<p style="margin-bottom: 0in; line-height: 100%">               
+{analysisResult &amp;&amp; (</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;Fragment&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;AnalysisResult result={analysisResult} sources={sources} /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;div className=&quot;mt-4 flex justify-end&quot;&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;button</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   onClick={handleCopyToClipboard}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   className=&quot;flex items-center px-4 py-2 bg-gray-600 text-white
+text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none
+focus:ring-2 focus:ring-gray-500 focus:ring-offset-2&quot;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   &lt;Copy className=&quot;w-4 h-4 mr-2&quot; /&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+   {copied ? 'Copied!' : 'Copy Report'}</p>
+<p style="margin-bottom: 0in; line-height: 100%">                    
+ &lt;/button&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                   
+&lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                 
+&lt;/Fragment&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">                )}</p>
+<p style="margin-bottom: 0in; line-height: 100%">              &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">            &lt;/div&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">          );</p>
+<p style="margin-bottom: 0in; line-height: 100%">        }</p>
+<p style="margin-bottom: 0in; line-height: 100%"><br/>
+
+</p>
+<p style="margin-bottom: 0in; line-height: 100%">        // --- FIX:
+Use modern createRoot API for React 18 to remove deprecation warning
+---</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const
+container = document.getElementById('root');</p>
+<p style="margin-bottom: 0in; line-height: 100%">        const root =
+ReactDOM.createRoot(container);</p>
+<p style="margin-bottom: 0in; line-height: 100%">       
+root.render(&lt;App /&gt;);</p>
+<p style="margin-bottom: 0in; line-height: 100%">    &lt;/script&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">&lt;/body&gt;</p>
+<p style="margin-bottom: 0in; line-height: 100%">&lt;/html&gt;</p>
+</body>
+</html>
