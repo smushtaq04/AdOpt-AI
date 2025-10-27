@@ -1,0 +1,527 @@
+import React, { useState, Fragment } from 'react';
+import {
+BarChart2,
+Target,
+Lightbulb,
+CheckCircle,
+ChevronDown,
+Loader2,
+AlertTriangle,
+Search,
+Copy
+} from 'lucide-react';
+
+// --- Constants ---
+
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
+const API_KEY = ""; // Per instructions, leave this empty.
+
+const SYSTEM_PROMPT = `You are "AdOpt", an expert-level Marketing Analyst and Data Scientist. Your specialty is analyzing ad campaign data from Google, Meta, and TikTok.
+
+Your task is to analyze the provided campaign data based on the user's selected analysis type and specific query. You MUST generate a concise, insightful, and professional report.
+
+Your report MUST be structured with the following three sections:
+
+1. **Performance Evaluation:**
+* Start by directly answering the user's query.
+* Provide a clear, data-driven summary of campaign performance.
+* Focus on the most relevant key metrics (e.g., ROAS, CPA, CTR, CVR) for their analysis type.
+* For A/B tests, clearly state the winning variant and the statistical significance (or lack thereof, if data is insufficient).
+
+2. **Key Insights:**
+* Provide 2-3 bullet points highlighting *why* the performance was what it was.
+* This is where you connect the dots. (e.g., "- Campaign B's higher CPA is likely linked to its 50% lower CTR, suggesting the creative was less engaging to the target audience.")
+* (e.g., "- TikTok is driving the lowest-cost traffic (low CPC), but Meta is achieving a 3x higher Conversion Rate, indicating better audience-to-product fit.")
+
+3. **Actionable Recommendations:**
+* Provide 2-3 concrete, data-driven suggestions for optimization and sustainable growth.
+* These must be actionable. (e.g., "GOOD: 'Allocate 20% of the TikTok budget to a retargeting campaign on Meta for users who visited the site but didn't purchase.' BAD: 'Improve ROAS.'")
+* **Crucially, use the provided Google Search tool** to find current industry benchmarks (e.g., "average CTR for e-commerce on Google Ads") to contextualize your analysis and make your recommendations stronger. You must cite any sources you use.
+`;
+
+// --- Helper Functions ---
+
+/**
+* A simple helper to copy text to the clipboard.
+* Uses document.execCommand for iframe compatibility.
+* @param {string} text - The text to copy.
+* @returns {Promise<boolean>} - True if successful, false otherwise.
+*/
+const copyToClipboard = (text) => {
+return new Promise((resolve) => {
+try {
+const textArea = document.createElement('textarea');
+textArea.value = text;
+textArea.style.position = 'fixed'; // Avoid scrolling
+textArea.style.opacity = 0;
+document.body.appendChild(textArea);
+textArea.focus();
+textArea.select();
+const successful = document.execCommand('copy');
+document.body.removeChild(textArea);
+resolve(successful);
+} catch (err) {
+console.error('Clipboard copy failed:', err);
+resolve(false);
+}
+});
+};
+
+/**
+* Parses the raw text response from the LLM into a structured object.
+* @param {string} text - The raw text from the Gemini API.
+* @returns {{evaluation: string, insights: string[], recommendations: string[]}}
+*/
+const parseAnalysis = (text) => {
+const evaluationMatch = text.match(/1\. \*\*Performance Evaluation:\*\*(.*?)(?=2\. \*\*Key Insights:\*\*|$)/s);
+const insightsMatch = text.match(/2\. \*\*Key Insights:\*\*(.*?)(?=3\. \*\*Actionable Recommendations:\*\*|$)/s);
+const recommendationsMatch = text.match(/3\. \*\*Actionable Recommendations:\*\*(.*)/s);
+
+const evaluation = evaluationMatch ? evaluationMatch[1].trim() : "No evaluation provided.";
+
+const parseList = (sectionText) => {
+if (!sectionText) return [];
+return sectionText.trim().split('\n')
+.map(item => item.replace(/^[\s*-–•]+\s*/, '').trim()) // remove bullets/dashes
+.filter(item => item.length > 5); // Filter out empty or noise lines
+};
+
+const insights = parseList(insightsMatch ? insightsMatch[1] : '');
+const recommendations = parseList(recommendationsMatch ? recommendationsMatch[1] : '');
+
+return { evaluation, insights, recommendations };
+};
+
+
+// --- React Components ---
+
+/**
+* A collapsible component to guide the user on data input.
+*/
+const DataGuidance = () => (
+<details className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+<summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+<div className="flex items-center space-x-3">
+<CheckCircle className="w-6 h-6 text-indigo-500" />
+<span className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+How to Provide Data for a Perfect Analysis
+</span>
+</div>
+<ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400 transform transition-transform duration-200" />
+</summary>
+<div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+<p className="mb-4 text-gray-700 dark:text-gray-300">
+For the best results, paste your data as plain text. CSV (Comma-Separated Values) format is ideal. The more data you provide, the better the insights!
+</p>
+
+<h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Key Metrics to Include:</h4>
+<ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
+<li>Platform (Google, Meta, etc.)</li>
+<li>Campaign Name</li>
+<li>Spend (Cost)</li>
+<li>Impressions</li>
+<li>Clicks</li>
+<li>CTR (Click-Through Rate)</li>
+<li>Conversions (Purchases, Leads)</li>
+<li>CPA (Cost Per Acquisition)</li>
+<li>CVR (Conversion Rate)</li>
+<li>Revenue (if applicable)</li>
+<li>ROAS (Return on Ad Spend)</li>
+</ul>
+
+<h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">For A/B Tests, also add:</h4>
+<ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mb-6">
+<li><code>Group</code> (e.g., "A", "B", "Control", "Variant")</li>
+<li><code>Variable Tested</code> (e.g., "Headline", "Audience")</li>
+</ul>
+
+<h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Example Format (CSV):</h4>
+<pre className="p-3 bg-gray-100 dark:bg-gray-900 rounded-md text-sm text-gray-800 dark:text-gray-200 overflow-x-auto">
+{`Platform,Campaign Name,Spend,Impressions,Clicks,Conversions,Revenue\n`}
+{`Google,Product Launch - Search,1500,50000,2500,100,6000\n`}
+{`Meta,Product Launch - Video,2000,150000,3000,120,7200\n`}
+{`TikTok,Product Launch - Awareness,1000,500000,5000,80,4000`}
+</pre>
+</div>
+</details>
+);
+
+/**
+* Component to display the final analysis result.
+*/
+const AnalysisResult = ({ result, sources }) => (
+<div className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg animate-fade-in">
+<div className="p-6">
+<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+Campaign Analysis Report
+</h2>
+
+{/* Performance Evaluation */}
+<div className="mb-6">
+<div className="flex items-center space-x-3 mb-3">
+<BarChart2 className="w-6 h-6 text-indigo-500" />
+<h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Performance Evaluation</h3>
+</div>
+<p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+{result.evaluation}
+</p>
+</div>
+
+{/* Key Insights */}
+<div className="mb-6">
+<div className="flex items-center space-x-3 mb-3">
+<Lightbulb className="w-6 h-6 text-yellow-500" />
+<h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Key Insights</h3>
+</div>
+<ul className="space-y-2">
+{result.insights.map((insight, index) => (
+<li key={index} className="flex items-start">
+<span className="flex-shrink-0 w-5 h-5 text-indigo-500 mt-1 mr-3">
+<CheckCircle className="w-5 h-5" />
+</span>
+<span className="text-gray-700 dark:text-gray-300">{insight}</span>
+</li>
+))}
+</ul>
+</div>
+
+{/* Actionable Recommendations */}
+<div className="mb-6">
+<div className="flex items-center space-x-3 mb-3">
+<Target className="w-6 h-6 text-green-500" />
+<h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Actionable Recommendations</h3>
+</div>
+<ul className="space-y-2">
+{result.recommendations.map((rec, index) => (
+<li key={index} className="flex items-start">
+<span className="flex-shrink-0 w-5 h-5 text-green-500 mt-1 mr-3">
+<Target className="w-5 h-5" />
+</span>
+<span className="text-gray-700 dark:text-gray-300">{rec}</span>
+</li>
+))}
+</ul>
+</div>
+
+{/* Sources */}
+{sources && sources.length > 0 && (
+<div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+<div className="flex items-center space-x-3 mb-3">
+<Search className="w-5 h-5 text-gray-500" />
+<h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Sources (from Google Search)</h3>
+</div>
+<ul className="space-y-2">
+{sources.map((source, index) => (
+<li key={index} className="flex items-start">
+<a
+href={source.uri}
+target="_blank"
+rel="noopener noreferrer"
+className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline truncate"
+title={source.title}
+>
+{`[${index + 1}] ${source.title}`}
+</a>
+</li>
+))}
+</ul>
+</div>
+)}
+</div>
+</div>
+);
+
+/**
+* Main Application Component
+*/
+export default function App() {
+const [campaignData, setCampaignData] = useState('');
+const [userQuery, setUserQuery] = useState('');
+const [analysisType, setAnalysisType] = useState('cross-channel');
+const [analysisResult, setAnalysisResult] = useState(null);
+const [sources, setSources] = useState([]);
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState(null);
+const [copied, setCopied] = useState(false);
+
+// Example data to pre-fill the textarea
+const exampleData = `Platform,Campaign Name,Group,Variable Tested,Spend,Impressions,Clicks,Conversions,Revenue
+Google,Search - Product A - Control,Control,Headline,1000,50000,2000,100,5000
+Google,Search - Product A - Variant,Variant,Headline,1000,52000,2500,130,6500
+Meta,Video - Product B,N/A,N/A,1500,200000,4000,150,7500
+TikTok,Awareness - Product B,N/A,N/A,800,700000,7000,80,3200
+Meta,LeadGen - Service C,N/A,N/A,1200,80000,1000,200,N/A
+`;
+
+const handleUseExample = () => {
+setCampaignData(exampleData);
+setUserQuery("Analyze the A/B test for Product A. Also, compare the performance of Product B campaigns on Meta vs. TikTok.");
+setAnalysisType('ab-test');
+};
+
+const handleCopyToClipboard = () => {
+if (!analysisResult) return;
+
+const textToCopy = `
+Performance Evaluation:
+${analysisResult.evaluation}
+
+Key Insights:
+${analysisResult.insights.map(i => `- ${i}`).join('\n')}
+
+Actionable Recommendations:
+${analysisResult.recommendations.map(r => `- ${r}`).join('\n')}
+
+Sources:
+${sources.map(s => `[${s.title}](${s.uri})`).join('\n')}
+`;
+
+copyToClipboard(textToCopy.trim()).then((success) => {
+if (success) {
+setCopied(true);
+setTimeout(() => setCopied(false), 2000);
+}
+});
+};
+
+/**
+* Main function to call the Gemini API.
+* Includes exponential backoff retry logic.
+*/
+const handleSubmit = async (e) => {
+e.preventDefault();
+if (!campaignData.trim() || !userQuery.trim()) {
+setError('Please provide both campaign data and a specific query.');
+return;
+}
+
+setIsLoading(true);
+setError(null);
+setAnalysisResult(null);
+setSources([]);
+
+const userPrompt = `
+Analysis Type: ${analysisType}
+User Query: ${userQuery}
+
+Campaign Data:
+${campaignData}
+`;
+
+const payload = {
+contents: [{ parts: [{ text: userPrompt }] }],
+systemInstruction: {
+parts: [{ text: SYSTEM_PROMPT }]
+},
+tools: [{ "google_search": {} }],
+};
+
+let retries = 3;
+let delay = 1000;
+let success = false;
+
+while (retries > 0 && !success) {
+try {
+const response = await fetch(GEMINI_API_URL + API_KEY, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(payload),
+});
+
+if (!response.ok) {
+if (response.status === 429) {
+throw new Error('Rate limit exceeded. Retrying...');
+}
+throw new Error(`API Error: ${response.status} ${response.statusText}`);
+}
+
+const result = await response.json();
+const candidate = result.candidates?.[0];
+
+if (candidate && candidate.content?.parts?.[0]?.text) {
+const rawText = candidate.content.parts[0].text;
+const parsedData = parseAnalysis(rawText);
+setAnalysisResult(parsedData);
+
+// Extract grounding sources
+const groundingMetadata = candidate.groundingMetadata;
+if (groundingMetadata && groundingMetadata.groundingAttributions) {
+const validSources = groundingMetadata.groundingAttributions
+.map(attr => ({
+uri: attr.web?.uri,
+title: attr.web?.title,
+}))
+.filter(source => source.uri && source.title);
+setSources(validSources);
+}
+
+success = true;
+} else {
+throw new Error('Invalid response structure from API.');
+}
+
+} catch (err) {
+console.error(err);
+retries--;
+if (retries === 0) {
+setError(`Failed to get analysis after multiple attempts. Error: ${err.message}`);
+} else {
+await new Promise(resolve => setTimeout(resolve, delay));
+delay *= 2;
+}
+}
+}
+
+setIsLoading(false);
+};
+
+return (
+<div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-inter p-4 sm:p-8">
+<style>{`
+body { font-family: 'Inter', sans-serif; }
+@keyframes fade-in {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+details[open] summary ~ * { animation: fade-in 0.3s ease-out; }
+details[open] summary svg:last-child { transform: rotate(180deg); }
+`}</style>
+
+<div className="max-w-5xl mx-auto">
+<header className="text-center mb-8">
+<h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-3">
+AdOpt <span className="text-indigo-500">AI Campaign Analyzer</span>
+</h1>
+<p className="text-lg text-gray-600 dark:text-gray-400">
+Paste your campaign data, ask a question, and get expert analysis for sustainable growth.
+</p>
+</header>
+
+{/* Data Guidance Component */}
+<DataGuidance />
+
+{/* Main Form */}
+<form onSubmit={handleSubmit} className="mt-8 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-6 sm:p-8 space-y-6">
+
+{/* Campaign Data Textarea */}
+<div>
+<div className="flex justify-between items-center mb-2">
+<label htmlFor="campaignData" className="block text-sm font-semibold text-gray-800 dark:text-gray-100">
+1. Paste Your Campaign Data (CSV or plain text)
+</label>
+<button
+type="button"
+onClick={handleUseExample}
+className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+>
+Use Example Data
+</button>
+</div>
+<textarea
+id="campaignData"
+value={campaignData}
+onChange={(e) => setCampaignData(e.target.value)}
+rows="12"
+className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-mono"
+placeholder="Platform,Campaign Name,Spend,Impressions,Clicks..."
+/>
+</div>
+
+{/* Analysis Type Radio Buttons */}
+<div>
+<label className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-3">
+2. Select Analysis Type
+</label>
+<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+{[
+{ id: 'cross-channel', label: 'Cross-Channel' },
+{ id: 'ab-test', label: 'A/B Test' },
+{ id: 'intra-platform-product', label: 'Same Platform (Diff. Products)' },
+{ id: 'intra-platform-campaign', label: 'Same Platform (Same Product)' },
+].map((item) => (
+<label
+key={item.id}
+htmlFor={item.id}
+className={`flex items-center justify-center text-center p-3 border rounded-md cursor-pointer transition-all duration-200 ${
+analysisType === item.id
+? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
+: 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+}`}
+>
+<input
+type="radio"
+id={item.id}
+name="analysisType"
+value={item.id}
+checked={analysisType === item.id}
+onChange={(e) => setAnalysisType(e.target.value)}
+className="sr-only"
+/>
+<span className="text-sm font-medium">{item.label}</span>
+</label>
+))}
+</div>
+</div>
+
+{/* User Query Input */}
+<div>
+<label htmlFor="userQuery" className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-2">
+3. What do you want to analyze?
+</label>
+<input
+type="text"
+id="userQuery"
+value={userQuery}
+onChange={(e) => setUserQuery(e.target.value)}
+className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+placeholder="e.g., 'Which campaign had the best ROAS?' or 'Why did Variant A win?'"
+/>
+</div>
+
+{/* Submit Button */}
+<button
+type="submit"
+disabled={isLoading}
+className="w-full flex items-center justify-center p-4 bg-indigo-600 text-white font-semibold rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+>
+{isLoading ? (
+<Fragment>
+<Loader2 className="w-5 h-5 mr-2 animate-spin" />
+Analyzing...
+</Fragment>
+) : (
+'Analyze Campaigns'
+)}
+</button>
+</form>
+
+{/* Error Message */}
+{error && (
+<div className="mt-6 w-full flex items-center p-4 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-100 animate-fade-in">
+<AlertTriangle className="w-5 h-5 mr-3 flex-shrink-0" />
+<span className="font-medium">{error}</span>
+</div>
+)}
+
+{/* Results */}
+{analysisResult && (
+<Fragment>
+<AnalysisResult result={analysisResult} sources={sources} />
+<div className="mt-4 flex justify-end">
+<button
+onClick={handleCopyToClipboard}
+className="flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+>
+<Copy className="w-4 h-4 mr-2" />
+{copied ? 'Copied!' : 'Copy Report'}
+</button>
+</div>
+</Fragment>
+)}
+</div>
+</div>
+);
+}
